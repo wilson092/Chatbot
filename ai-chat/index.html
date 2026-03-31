@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permata AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-title">
+            <i class="fas fa-gem"></i>
+            <span>Permata AI</span>
+        </div>
+        <div class="header-icons">
+            <button class="icon-btn tooltip" id="themeBtn" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="icon-btn tooltip" id="settingsBtn" title="Settings">
+                <i class="fas fa-sliders-h"></i>
+            </button>
+            <button class="icon-btn tooltip" id="infoBtn" title="Info">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="main-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+                <input type="text" class="search-box" id="searchBox" placeholder="Search chats...">
+            </div>
+
+            <div class="chat-list" id="chatList"></div>
+
+            <div class="sidebar-footer">
+                <button class="footer-btn" id="saveChatBtn" title="Save">
+                    <i class="fas fa-floppy-disk"></i> Save
+                </button>
+                <button class="footer-btn" id="exportBtn" title="Export">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <button class="footer-btn" id="loadBtn" title="Load">
+                    <i class="fas fa-upload"></i> Load
+                </button>
+                <button class="footer-btn" id="clearBtn" title="Clear">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- CHAT CONTAINER -->
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-comments"></i></div>
+                    <h2>Mulai Percakapan</h2>
+                    <p>Ketik pesan untuk memulai obrolan dengan AI</p>
+                </div>
+            </div>
+
+            <!-- INPUT AREA -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea class="chat-input" id="chatInput" placeholder="Ketik pesan Anda... (Shift+Enter untuk baris baru)" rows="1"></textarea>
+                    <div class="input-actions">
+                        <button class="input-action-btn" id="aiModelBtn" title="AI Model">
+                            <i class="fas fa-brain"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="send-btn" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">⚙️ Settings</h2>
+                <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
+            </div>
+            <div class="settings-group">
+                <label class="settings-label">AI Model</label>
+                <select class="settings-input" id="modelSelect">
+                    <option value="openai/gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                    <option value="openai/gpt-4">GPT-4</option>
+                    <option value="meta-llama/llama-2-70b-chat">Llama 2</option>
+                </select>
+            </div>
+            <div class="settings-group">
+                <label class="settings-label">Temperature (Kreativitas): <span id="tempValue">0.7</span></label>
+                <input type="range" class="settings-input" id="temperatureSlider" min="0" max="2" step="0.1" value="0.7">
+            </div>
+            <div class="settings-group">
+                <label class="settings-label">Max Tokens</label>
+                <input type="number" class="settings-input" id="maxTokensInput" value="2000" min="100" max="4000">
+            </div>
+            <div class="settings-group">
+                <label class="settings-label">
+                    <input type="checkbox" id="autoSaveCheckbox" checked> Auto-save percakapan
+                </label>
+            </div>
+            <div class="settings-group">
+                <label class="settings-label">
+                    <input type="checkbox" id="timestampCheckbox" checked> Tampilkan waktu pesan
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn" onclick="resetSettings()">Reset</button>
+                <button class="modal-btn primary" onclick="closeSettingsModal()">Selesai</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPORT MODAL -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📥 Export Chat</h2>
+                <button class="modal-close" onclick="closeExportModal()">&times;</button>
+            </div>
+            <div class="settings-group">
+                <label class="settings-label">Pilih Format</label>
+                <select class="settings-input" id="exportFormat">
+                    <option value="json">JSON (Lengkap)</option>
+                    <option value="txt">Text (.txt)</option>
+                    <option value="md">Markdown (.md)</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn" onclick="closeExportModal()">Batal</button>
+                <button class="modal-btn primary" onclick="confirmExport()">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFO MODAL -->
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">ℹ️ Info</h2>
+                <button class="modal-close" onclick="closeInfoModal()">&times;</button>
+            </div>
+            <div style="line-height: 1.8; color: var(--text-secondary); font-size: 13px;">
+                <p><strong>� Permata AI v2.0</strong></p>
+                <p style="margin-top: 12px;"><strong>✨ Fitur:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 8px; list-style: none;">
+                    <li>✅ 💬 Chat real-time dengan AI</li>
+                    <li>✅ 💾 Save & Load percakapan</li>
+                    <li>✅ 📥 Export berbagai format</li>
+                    <li>✅ ⚙️ Settings lengkap</li>
+                    <li>✅ 🌙 Dark/Light mode</li>
+                    <li>✅ ✂️ Copy & Delete pesan</li>
+                    <li>✅ ⌨️ Keyboard shortcuts</li>
+                    <li>✅ 🔍 Search percakapan</li>
+                </ul>
+            </div>
+            <div class="modal-actions" style="margin-top: 20px;">
+                <button class="modal-btn primary" onclick="closeInfoModal()" style="flex: 1;">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" style="display:none;position:fixed;bottom:20px;right:20px;background:rgba(30,41,59,0.95);border:1px solid rgba(99,102,241,0.3);color:white;padding:15px 20px;border-radius:10px;backdrop-filter:blur(20px);z-index:2000;max-width:300px;box-shadow:0 4px 20px rgba(0,0,0,0.3)"></div>
+
+    <!-- SCRIPTS -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
