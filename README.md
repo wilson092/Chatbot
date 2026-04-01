@@ -49,7 +49,7 @@ Simple & modern AI chat application built with vanilla JavaScript and Express.js
 ### 1. Clone & Install
 ```bash
 git clone https://github.com/wilson092/Chatbot.git
-cd ai-chat
+cd Chatbot
 npm install
 ```
 
