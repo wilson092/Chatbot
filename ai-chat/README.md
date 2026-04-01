@@ -1,5 +1,7 @@
 # 💎 Permata AI - AI Chat Application
 
+> ⚠️ **STATUS: BETA** - Aplikasi masih dalam tahap pengembangan. Fitur dapat berubah sewaktu-waktu.
+
 Simple & modern AI chat application built with vanilla JavaScript and Express.js powered by OpenRouter API.
 
 ---
@@ -47,7 +49,7 @@ Simple & modern AI chat application built with vanilla JavaScript and Express.js
 ### 1. Clone & Install
 ```bash
 git clone https://github.com/wilson092/Chatbot.git
-cd Chatbot
+cd ai-chat
 npm install
 ```
 
